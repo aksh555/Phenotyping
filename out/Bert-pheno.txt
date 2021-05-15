@@ -1,0 +1,5 @@
+jaccard_micro: 0.0
+jaccard_macro: 0.0
+hammingloss: 0.17317073170731706
+F1: 0.0
+Acc: 0.17073170731707318
