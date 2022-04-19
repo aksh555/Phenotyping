@@ -66,6 +66,7 @@ class BERT(BaseModel):
         self.m = nn.ReLU()
 
     def forward(self, x, x1, attention_mask, attention_mask1, labels=None):
+        print(x.size(), x1.size())
         outputs = self.encoder(input_ids=x, attention_mask=attention_mask)[0]
         outputs1 = self.encoder(
             input_ids=x1, attention_mask=attention_mask1)[0]

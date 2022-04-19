@@ -296,9 +296,9 @@ def main():
     model_dir = "./models"
     out_dir = "./out"
 
-    df = pd.read_csv(os.path.join(files_dir, 'pheno_notes_disch.csv'))
+    df = pd.read_csv(os.path.join(files_dir, 'pheno_disch-ref.csv'))
     tz = BertTokenizer.from_pretrained(
-        './disch_tokenizer', padding=True, truncation=True)
+        './data_files/disch_tokenizer', padding=True, truncation=True)
     model = ENCAML(numClasses, None, vocab_size= tz.vocab_size)
 
     RANDOM_SEED = 42
@@ -329,6 +329,7 @@ def main():
     #criterion = FocalLoss(alpha=10, gamma=5)
     history = defaultdict(list)
     best_loss = float('inf')
+    stop_it =0 
 
     if args.do_train:
         for epoch in range(EPOCHS):
@@ -364,6 +365,13 @@ def main():
                 torch.save(model.state_dict(), os.path.join(
                     model_dir, 'Enc_best-pheno-bce.bin'))
                 best_loss = val_loss
+                stop_it=0
+            else:
+                stop_it += 1
+                if stop_it == 3:
+                    print(f'Early Stop: No improvement in validation loss')
+                    break
+        print('Training done!')
 
     if args.do_eval:
         model.load_state_dict(torch.load(
